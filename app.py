@@ -5,9 +5,15 @@ import pandas as pd
 from datetime import datetime
 
 # --- Firebase Setup ---
-if not firebase_admin._apps:
-    cred = credentials.Certificate("serviceAccountKey.json")
-    firebase_admin.initialize_app(cred)
+import streamlit as st
+import json
+from google.oauth2 import service_account
+from google.cloud import firestore
+
+# Naya tareeqa: Secrets se key uthayen
+key_dict = json.loads(st.secrets["firebase"]["key"])
+creds = service_account.Credentials.from_service_account_info(key_dict)
+db = firestore.Client(credentials=creds, project=key_dict['project_id'])
 db = firestore.client()
 
 st.set_page_config(page_title="MMS IT Inventory System", layout="wide")
